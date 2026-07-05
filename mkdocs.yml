@@ -117,6 +117,8 @@ extra_javascript:
   - _js/stats.js
   - _js/likes.js
   - _js/inline-comments.js
+  - _js/news.js
+  - _js/summary.js
   - https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js
 
 nav:
