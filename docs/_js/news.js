@@ -20,18 +20,20 @@
       icon: '📱',
     },
     {
-      name: '知乎每日精选',
-      rss: 'https://www.zhihu.com/rss',
+      name: 'InfoQ',
+      rss: 'https://www.infoq.cn/feed',
       icon: '💡',
     },
   ];
 
+  function isHomePage() {
+    const path = window.location.pathname.replace(/\/$/, '');
+    return path === '' || path === '/' || path === '/notebook';
+  }
+
   function createNewsSection() {
     // 只在首页显示
-    if (window.location.pathname.replace(/\/$/, '') !== '/notebook' &&
-        window.location.pathname !== '/') {
-      return;
-    }
+    if (!isHomePage()) return;
 
     const container = document.querySelector('article.md-content__inner');
     if (!container) return;
@@ -61,9 +63,13 @@
 
     for (const source of NEWS_SOURCES) {
       try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8000);
         const res = await fetch(
-          `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.rss)}`
+          `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.rss)}`,
+          { signal: controller.signal }
         );
+        clearTimeout(timeout);
         if (!res.ok) continue;
         const data = await res.json();
         if (data.items) {

@@ -9,7 +9,7 @@ edit_uri: blob/main/docs
 theme:
   name: material
   language: zh
-  favicon: _assets/favicon.ico
+  favicon: _assets/fav1.ico
   icon:
     logo: octicons/paper-airplane-16
     repo: fontawesome/brands/github-alt
@@ -31,8 +31,8 @@ theme:
     code: JetBrains Mono
   palette:
     scheme: default
-    primary: brown
-    accent: deep orange
+    primary: indigo
+    accent: teal
   features:
     - content.code.annotate
     - content.code.copy
@@ -131,3 +131,6 @@ nav:
     - "Markdown 自学笔记": notes/markdown.md
     - "HTML 自学笔记": notes/html.md
     - "CSS 自学笔记": notes/css.md
+    - "Git 自学笔记": notes/git.md
+    - "JavaScript 自学笔记": notes/javascript.md
+    - "Python 自学笔记": notes/python.md

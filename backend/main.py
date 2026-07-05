@@ -2,13 +2,14 @@
 
 import os
 from dotenv import load_dotenv
+
+# 加载 .env — 必须在导入 routers 之前，因为 summary.py 模块级会读取环境变量
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
 from routers import views, likes, comments, summary
-
-# 加载 .env
-load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
 # 创建所有表
 Base.metadata.create_all(bind=engine)

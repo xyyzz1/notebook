@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'http://localhost:8001';
+  const API_BASE = 'http://47.99.61.217:8001';
 
   function getPageUrl() {
     return window.location.pathname.replace(/\/$/, '') || '/';
@@ -92,16 +92,17 @@
   }
 
   // ====== 心跳 ======
+  function sendHeartbeat() {
+    fetch(`${API_BASE}/api/stats/heartbeat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: getSessionId() }),
+    }).catch(() => {});
+  }
+
   function startHeartbeat() {
-    setInterval(async () => {
-      try {
-        await fetch(`${API_BASE}/api/stats/heartbeat`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ session_id: getSessionId() }),
-        });
-      } catch {}
-    }, 30000);
+    sendHeartbeat(); // 立即发送第一次心跳
+    setInterval(sendHeartbeat, 30000);
   }
 
   if (document.readyState === 'loading') {

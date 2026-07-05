@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'http://localhost:8001';
+  const API_BASE = 'http://47.99.61.217:8001';
 
   // URL → 文章标题映射
   const TITLE_MAP = {
@@ -22,6 +22,18 @@
     '/notebook/notes/css/': 'CSS 自学笔记',
     '/notes/css': 'CSS 自学笔记',
     '/notes/css/': 'CSS 自学笔记',
+    '/notebook/notes/git': 'Git 自学笔记',
+    '/notebook/notes/git/': 'Git 自学笔记',
+    '/notes/git': 'Git 自学笔记',
+    '/notes/git/': 'Git 自学笔记',
+    '/notebook/notes/javascript': 'JavaScript 自学笔记',
+    '/notebook/notes/javascript/': 'JavaScript 自学笔记',
+    '/notes/javascript': 'JavaScript 自学笔记',
+    '/notes/javascript/': 'JavaScript 自学笔记',
+    '/notebook/notes/python': 'Python 自学笔记',
+    '/notebook/notes/python/': 'Python 自学笔记',
+    '/notes/python': 'Python 自学笔记',
+    '/notes/python/': 'Python 自学笔记',
   };
 
   function isHomePage() {

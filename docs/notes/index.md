@@ -13,6 +13,9 @@ statistics: false
     | [Markdown 自学笔记](markdown.md) | 轻量级标记语言的完整学习指南 |
     | [HTML 自学笔记](html.md) | 网页结构标记语言的系统学习 |
     | [CSS 自学笔记](css.md) | 网页样式表语言的全面整理 |
+    | [Git 自学笔记](git.md) | 分布式版本控制系统的学习 |
+    | [JavaScript 自学笔记](javascript.md) | Web 交互语言的核心知识 |
+    | [Python 自学笔记](python.md) | 简洁而强大的通用编程语言 |
 
 !!! tip "学习路线建议"
     如果你也是初学者，建议按照以下顺序学习：
@@ -20,5 +23,8 @@ statistics: false
     1. **Markdown** — 先学会用 Markdown 写文档，这是最基础的工具
     2. **HTML** — 理解网页的结构和语义化标签
     3. **CSS** — 掌握网页的样式和布局
+    4. **Git** — 学习版本控制，管理你的代码
+    5. **JavaScript** — 让网页动起来，掌握前端核心
+    6. **Python** — 接触后端与数据处理的世界
 
     > 每篇笔记都配有丰富的代码示例，建议动手实践！

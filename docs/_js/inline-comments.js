@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'http://localhost:8001';
+  const API_BASE = 'http://47.99.61.217:8001';
 
   function getPageUrl() {
     return window.location.pathname.replace(/\/$/, '') || '/';
