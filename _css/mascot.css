@@ -1,0 +1,275 @@
+/* ========== 2D 看板娘 Mascot ========== */
+
+#mascot-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.3s ease;
+}
+
+#mascot-container:hover {
+  transform: scale(1.05);
+}
+
+/* 角色主体 */
+.mascot-body {
+  position: relative;
+  width: 80px;
+  height: 90px;
+  animation: mascot-float 3s ease-in-out infinite;
+}
+
+@keyframes mascot-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* 头部 */
+.mascot-head {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #ffcc80, #ffab40);
+  border-radius: 50%;
+  border: 2px solid #e65100;
+}
+
+/* 耳朵 */
+.mascot-head::before,
+.mascot-head::after {
+  content: '';
+  position: absolute;
+  top: -12px;
+  width: 16px;
+  height: 20px;
+  background: linear-gradient(180deg, #ffcc80, #ffab40);
+  border: 2px solid #e65100;
+  border-radius: 50% 50% 30% 30%;
+}
+
+.mascot-head::before {
+  left: 4px;
+  transform: rotate(-15deg);
+}
+
+.mascot-head::after {
+  right: 4px;
+  transform: rotate(15deg);
+}
+
+/* 眼睛 */
+.mascot-eyes {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+}
+
+.mascot-eye {
+  width: 10px;
+  height: 12px;
+  background: #333;
+  border-radius: 50%;
+  position: relative;
+  transition: transform 0.1s ease;
+}
+
+.mascot-eye::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+/* 腮红 */
+.mascot-blush {
+  position: absolute;
+  top: 26px;
+  width: 8px;
+  height: 5px;
+  background: rgba(255, 138, 128, 0.5);
+  border-radius: 50%;
+}
+
+.mascot-blush.left {
+  left: 6px;
+}
+
+.mascot-blush.right {
+  right: 6px;
+}
+
+/* 嘴巴 */
+.mascot-mouth {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 6px;
+  border-bottom: 2px solid #c62828;
+  border-radius: 0 0 50% 50%;
+}
+
+/* 身体 */
+.mascot-torso {
+  position: absolute;
+  top: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 32px;
+  background: linear-gradient(135deg, #81c784, #4caf50);
+  border-radius: 50% 50% 30% 30%;
+  border: 2px solid #2e7d32;
+}
+
+/* 手臂 */
+.mascot-arm {
+  position: absolute;
+  top: 54px;
+  width: 10px;
+  height: 22px;
+  background: linear-gradient(180deg, #ffcc80, #ffab40);
+  border: 2px solid #e65100;
+  border-radius: 10px;
+  animation: mascot-wave 3s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+.mascot-arm.left {
+  left: 8px;
+  animation-delay: 0s;
+}
+
+.mascot-arm.right {
+  right: 8px;
+  animation-delay: 1.5s;
+}
+
+@keyframes mascot-wave {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(15deg); }
+}
+
+/* 对话气泡 */
+.mascot-speech {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  background: #fff;
+  border: 2px solid #ffab40;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #5d4037;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  pointer-events: none;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.mascot-speech.show {
+  transform: translateX(-50%) scale(1);
+}
+
+.mascot-speech::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #fff;
+}
+
+/* 切换按钮 */
+.mascot-toggle {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 20px;
+  height: 20px;
+  background: #ef5350;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+#mascot-container:hover .mascot-toggle {
+  opacity: 1;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  #mascot-container {
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .mascot-body {
+    width: 60px;
+    height: 68px;
+  }
+
+  .mascot-head {
+    width: 42px;
+    height: 42px;
+  }
+
+  .mascot-head::before,
+  .mascot-head::after {
+    top: -9px;
+    width: 12px;
+    height: 15px;
+  }
+
+  .mascot-torso {
+    top: 39px;
+    width: 27px;
+    height: 24px;
+  }
+
+  .mascot-arm {
+    top: 40px;
+    width: 8px;
+    height: 17px;
+  }
+
+  .mascot-arm.left { left: 6px; }
+  .mascot-arm.right { right: 5px; }
+
+  .mascot-eyes {
+    top: 14px;
+    gap: 9px;
+  }
+
+  .mascot-eye {
+    width: 8px;
+    height: 9px;
+  }
+
+  .mascot-blush { top: 20px; }
+  .mascot-mouth { bottom: 9px; }
+}
