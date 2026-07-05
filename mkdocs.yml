@@ -107,11 +107,13 @@ extra:
 
 extra_css:
   - _css/extra.css
+  - _css/mascot.css
   - https://gcore.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css
   - https://gcore.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css
 
 extra_javascript:
   - _js/extra.js
+  - _js/mascot.js
 
 nav:
   - "💠 封面":
