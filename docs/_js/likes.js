@@ -1,6 +1,6 @@
 /**
  * a site — 点赞功能
- * 对接后端 /api/likes 接口
+ * 只在笔记详情页显示（非首页、关于页、目录页）
  */
 
 (function () {
@@ -21,22 +21,77 @@
     return uid;
   }
 
+  function isNotePage() {
+    const path = getPageUrl();
+    // 排除封面、关于、目录页
+    if (path === '' || path === '/' || path === '/notebook' || path === '/notebook/') return false;
+    if (path.endsWith('/about') || path.endsWith('/about/')) return false;
+    if (path === '/notes' || path === '/notes/' || path === '/notebook/notes' || path === '/notebook/notes/') return false;
+    return true;
+  }
+
+  async function init() {
+    if (!isNotePage()) return;
+
+    // 等待 stats.js 创建 _asite_stats_bar
+    await waitForStatsBar();
+
+    const btn = createLikeButton();
+    const bar = document.getElementById('_asite_stats_bar');
+    if (bar) {
+      const sep = document.createElement('span');
+      sep.textContent = ' · ';
+      sep.style.cssText = 'color:var(--md-default-fg-color--lighter);font-size:13px;';
+      bar.appendChild(sep);
+      bar.appendChild(btn);
+    }
+
+    // 获取点赞状态
+    try {
+      const res = await fetch(
+        `${API_BASE}/api/likes/status?page_url=${encodeURIComponent(getPageUrl())}&user_id=${getUserId()}`
+      );
+      const data = await res.json();
+      updateButton(data);
+    } catch {}
+  }
+
+  function waitForStatsBar() {
+    return new Promise((resolve) => {
+      if (document.getElementById('_asite_stats_bar')) {
+        resolve();
+        return;
+      }
+      const observer = new MutationObserver(() => {
+        if (document.getElementById('_asite_stats_bar')) {
+          observer.disconnect();
+          resolve();
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+      // 最多等 3 秒
+      setTimeout(() => { observer.disconnect(); resolve(); }, 3000);
+    });
+  }
+
   function createLikeButton() {
+    const wrapper = document.createElement('span');
+    wrapper.id = '_asite_like_wrapper';
+    wrapper.style.cssText = 'font-size:13px;';
+
     const btn = document.createElement('button');
     btn.id = '_asite_like_btn';
     btn.style.cssText = `
-      display: inline-flex; align-items: center; gap: 6px;
-      background: none; border: 1.5px solid #e65100; border-radius: 20px;
-      padding: 6px 18px; font-size: 14px; cursor: pointer;
-      color: #e65100; font-family: inherit; transition: all 0.2s;
+      background: none; border: none; cursor: pointer;
+      color: var(--md-default-fg-color--light); font-size: 13px;
+      font-family: inherit; padding: 0; transition: color 0.2s;
     `;
-    btn.innerHTML = '🤍 点赞 <span id="_asite_like_count">0</span>';
+    btn.innerHTML = '🤍 <span id="_asite_like_count">0</span> 赞';
 
-    btn.addEventListener('mouseenter', () => {
-      btn.style.background = '#fff3e0';
-    });
+    btn.addEventListener('mouseenter', () => { btn.style.color = '#e65100'; });
     btn.addEventListener('mouseleave', () => {
-      btn.style.background = 'none';
+      const liked = btn.dataset.liked === '1';
+      btn.style.color = liked ? '#e65100' : 'var(--md-default-fg-color--light)';
     });
 
     btn.addEventListener('click', async () => {
@@ -48,12 +103,11 @@
         });
         const data = await res.json();
         updateButton(data);
-      } catch {
-        // fail silently
-      }
+      } catch {}
     });
 
-    return btn;
+    wrapper.appendChild(btn);
+    return wrapper;
   }
 
   function updateButton(data) {
@@ -62,38 +116,15 @@
     if (!btn || !count) return;
 
     count.textContent = data.total_likes;
-    btn.innerHTML = data.liked
-      ? `❤️ 已赞 <span id="_asite_like_count">${data.total_likes}</span>`
-      : `🤍 点赞 <span id="_asite_like_count">${data.total_likes}</span>`;
-  }
+    btn.dataset.liked = data.liked ? '1' : '0';
 
-  // 初始化
-  async function init() {
-    // 插入点赞按钮到标题下方
-    const title = document.querySelector('h1');
-    if (!title) return;
-
-    const btn = createLikeButton();
-    // 放到阅读次数旁边
-    const viewsEl = document.getElementById('_asite_views');
-    if (viewsEl) {
-      viewsEl.parentNode.insertBefore(btn, viewsEl.nextSibling);
-      // 加个分隔
-      const sep = document.createElement('span');
-      sep.textContent = ' ';
-      viewsEl.parentNode.insertBefore(sep, btn);
+    if (data.liked) {
+      btn.innerHTML = `❤️ <span id="_asite_like_count">${data.total_likes}</span> 赞`;
+      btn.style.color = '#e65100';
     } else {
-      title.parentNode.insertBefore(btn, title.nextSibling);
+      btn.innerHTML = `🤍 <span id="_asite_like_count">${data.total_likes}</span> 赞`;
+      btn.style.color = 'var(--md-default-fg-color--light)';
     }
-
-    // 获取点赞状态
-    try {
-      const res = await fetch(
-        `${API_BASE}/api/likes/status?page_url=${encodeURIComponent(getPageUrl())}&user_id=${getUserId()}`
-      );
-      const data = await res.json();
-      updateButton(data);
-    } catch {}
   }
 
   if (document.readyState === 'loading') {

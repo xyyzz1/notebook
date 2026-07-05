@@ -1,16 +1,14 @@
 /**
  * a site — 访问统计 + 在线人数
- * 对接后端 /api/stats 接口
+ * 创建统一 stats bar，点赞按钮通过 likes.js 追加
  */
 
 (function () {
   'use strict';
 
-  // ====== 配置：后端地址（部署时改为你的阿里云服务器地址）======
   const API_BASE = 'http://localhost:8001';
 
   function getPageUrl() {
-    // 返回相对路径作为页面标识，如 /notes/markdown/
     return window.location.pathname.replace(/\/$/, '') || '/';
   }
 
@@ -23,7 +21,28 @@
     return sid;
   }
 
-  // ====== 记录页面访问 ======
+  // 创建统一 stats bar（放在 h1 下方）
+  function ensureStatsBar() {
+    let bar = document.getElementById('_asite_stats_bar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = '_asite_stats_bar';
+      bar.style.cssText = `
+        display: flex; align-items: center; gap: 2px; flex-wrap: wrap;
+        font-size: 13px; color: var(--md-default-fg-color--light);
+        margin-bottom: 16px; padding-bottom: 8px;
+        border-bottom: 1px solid var(--md-default-fg-color--lightest);
+      `;
+      const title = document.querySelector('h1');
+      if (title && title.nextSibling) {
+        title.parentNode.insertBefore(bar, title.nextSibling);
+      } else if (title) {
+        title.parentNode.appendChild(bar);
+      }
+    }
+    return bar;
+  }
+
   async function recordView() {
     try {
       const res = await fetch(`${API_BASE}/api/stats/record-view?page_url=${encodeURIComponent(getPageUrl())}`, {
@@ -31,57 +50,45 @@
       });
       const data = await res.json();
       updateViewCounter(data);
-    } catch {
-      // 后端不可用时静默失败
-    }
+    } catch {}
   }
 
   function updateViewCounter(data) {
+    const bar = ensureStatsBar();
     let el = document.getElementById('_asite_views');
     if (!el) {
       el = document.createElement('span');
       el.id = '_asite_views';
-      el.style.cssText = 'font-size:13px;color:var(--md-default-fg-color--light);margin-left:12px;';
-      // 插入到页面标题下方
-      const title = document.querySelector('h1');
-      if (title) {
-        title.parentNode.insertBefore(el, title.nextSibling);
-      }
+      bar.appendChild(el);
     }
     el.textContent = `👁 ${data.total_views} 次阅读 · 今日 ${data.today_views}`;
   }
 
   // ====== 在线人数 SSE ======
-  let onlineEl = null;
-
   function startOnlineListener() {
-    const evtSource = new EventSource(`${API_BASE}/api/stats/online-stream`);
-
-    evtSource.addEventListener('online_count', (e) => {
-      const data = JSON.parse(e.data);
-      updateOnlineCounter(data.online_count);
-    });
-
-    evtSource.onerror = () => {
-      // SSE 连接失败，可能后端未启动
-    };
+    try {
+      const evtSource = new EventSource(`${API_BASE}/api/stats/online-stream`);
+      evtSource.addEventListener('online_count', (e) => {
+        const data = JSON.parse(e.data);
+        updateOnlineCounter(data.online_count);
+      });
+      evtSource.onerror = () => {};
+    } catch {}
   }
 
   function updateOnlineCounter(count) {
-    if (!onlineEl) {
-      onlineEl = document.createElement('span');
-      onlineEl.id = '_asite_online';
-      onlineEl.style.cssText = 'font-size:13px;color:var(--md-default-fg-color--light);margin-left:8px;';
+    const bar = ensureStatsBar();
+    let el = document.getElementById('_asite_online');
+    if (!el) {
+      const sep = document.createElement('span');
+      sep.textContent = ' · ';
+      bar.appendChild(sep);
 
-      const viewsEl = document.getElementById('_asite_views');
-      if (viewsEl) {
-        viewsEl.parentNode.insertBefore(onlineEl, viewsEl.nextSibling);
-      } else {
-        const title = document.querySelector('h1');
-        if (title) title.parentNode.insertBefore(onlineEl, title.nextSibling);
-      }
+      el = document.createElement('span');
+      el.id = '_asite_online';
+      bar.appendChild(el);
     }
-    onlineEl.textContent = `· 🟢 ${count} 人在线`;
+    el.textContent = `🟢 ${count} 在线`;
   }
 
   // ====== 心跳 ======
@@ -97,7 +104,6 @@
     }, 30000);
   }
 
-  // ====== 启动 ======
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       recordView();
