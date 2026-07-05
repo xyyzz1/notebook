@@ -7,7 +7,7 @@
   'use strict';
 
   // ====== 配置：后端地址（部署时改为你的阿里云服务器地址）======
-  const API_BASE = 'http://localhost:8000';
+  const API_BASE = 'http://localhost:8001';
 
   function getPageUrl() {
     // 返回相对路径作为页面标识，如 /notes/markdown/

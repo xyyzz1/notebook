@@ -76,7 +76,7 @@ def heartbeat(data: dict, db: Session = Depends(get_db)):
 @router.get("/online-stream")
 async def online_stream(request: Request, db: Session = Depends(get_db)):
     """SSE 实时推送在线人数"""
-    def event_generator():
+    async def event_generator():
         while True:
             if await request.is_disconnected():
                 break
@@ -87,6 +87,6 @@ async def online_stream(request: Request, db: Session = Depends(get_db)):
                 "event": "online_count",
                 "data": json.dumps({"online_count": count}),
             }
-            time.sleep(5)
+            await asyncio.sleep(5)
 
     return EventSourceResponse(event_generator())
