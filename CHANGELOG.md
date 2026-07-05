@@ -74,7 +74,7 @@ cac29d7 Initial commit: a site MkDocs notebook
 ## 待实现功能
 
 - [ ] 划线评论
-- [ ] 引用评论
+- [x] 引用评论
 - [x] 2D 前端小人
 - [ ] 博客热度排行（需后端）
 - [ ] 访问次数统计与在线阅读人数统计（需后端）
@@ -125,4 +125,35 @@ git push
 d691d79 Add reference_notebook to .gitignore
 464c0dd Remove reference_notebook from tracking
 cac29d7 Initial commit: a site MkDocs notebook
+```
+
+---
+
+## 2026-07-05 引用评论
+
+### 创建的文件
+
+| 文件 | 说明 |
+|------|------|
+| `docs/_js/quote-comment.js` | 引用评论功能 |
+
+### 修改的文件
+
+| 文件 | 变更 |
+|------|------|
+| `mkdocs.yml` | 添加 quote-comment.js 引用 |
+
+### 功能
+
+- 选中任意正文文字后，上方弹出 "💬 引用" 按钮
+- 点击将选中文字格式化为 Markdown 引用格式并复制到剪贴板
+- 自动滚动到评论区，Toast 提示用户粘贴
+
+### 执行的命令
+
+```bash
+mkdocs build
+git add docs/_js/quote-comment.js mkdocs.yml
+git commit -m "Add quote comment feature: select text to quote in comments"
+git push
 ```
