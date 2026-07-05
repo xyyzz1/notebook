@@ -157,3 +157,99 @@ git add docs/_js/quote-comment.js mkdocs.yml
 git commit -m "Add quote comment feature: select text to quote in comments"
 git push
 ```
+
+---
+
+## 2026-07-05 FastAPI 后端 + 前后端对接
+
+### 创建的文件
+
+**后端 (`backend/`)**
+
+| 文件 | 说明 |
+|------|------|
+| `backend/main.py` | FastAPI 主入口，CORS 配置，注册路由 |
+| `backend/database.py` | SQLAlchemy 引擎 + SQLite 数据库 |
+| `backend/models.py` | 数据模型：PageView, Like, InlineComment |
+| `backend/schemas.py` | Pydantic 请求/响应 Schema |
+| `backend/requirements.txt` | FastAPI, uvicorn, SQLAlchemy, sse-starlette |
+| `backend/routers/views.py` | 访问统计 API + SSE 在线人数推送 |
+| `backend/routers/likes.py` | 点赞切换 + 点赞状态 + 热度排行 |
+| `backend/routers/comments.py` | 划线评论 CRUD |
+
+**前端对接 (`docs/_js/`, `docs/_css/`)**
+
+| 文件 | 说明 |
+|------|------|
+| `docs/_js/stats.js` | 页面访问记录 + SSE 在线人数显示 |
+| `docs/_js/likes.js` | 点赞按钮 + 状态同步 |
+| `docs/_js/inline-comments.js` | 划线评论选中/提交/渲染/显示 |
+| `docs/_css/inline-comments.css` | 划线高亮 + Popover + 面板样式 |
+
+### 修改的文件
+
+| 文件 | 变更 |
+|------|------|
+| `mkdocs.yml` | 添加 stats.js, likes.js, inline-comments.js, inline-comments.css |
+
+### 技术栈
+
+- **后端**: FastAPI + SQLAlchemy + SQLite
+- **实时**: SSE (Server-Sent Events) 推送在线人数
+- **部署**: 阿里云 ECS + uvicorn
+
+### 数据库表
+
+| 表名 | 用途 |
+|------|------|
+| `page_views` | 页面访问量（按日累计） |
+| `likes` | 点赞记录（用户+页面唯一约束） |
+| `inline_comments` | 划线评论（锚点+偏移量定位） |
+
+### API 端点总览
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/api/stats/record-view` | 记录页面访问 |
+| POST | `/api/stats/heartbeat` | 在线心跳 |
+| GET | `/api/stats/online-stream` | SSE 在线人数 |
+| POST | `/api/likes/toggle` | 切换点赞 |
+| GET | `/api/likes/status` | 点赞状态 |
+| GET | `/api/likes/ranking` | 热度排行 |
+| POST | `/api/comments/` | 创建划线评论 |
+| GET | `/api/comments/` | 获取页面划线评论 |
+| DELETE | `/api/comments/{id}` | 删除划线评论 |
+| GET | `/api/health` | 健康检查 |
+
+### 后端启动命令
+
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --host 0.0.0.0 --port 8000
+```
+
+### 执行的命令
+
+```bash
+mkdir -p backend/routers
+mkdocs build
+git add backend/ docs/_js/stats.js docs/_js/likes.js docs/_js/inline-comments.js docs/_css/inline-comments.css mkdocs.yml
+git commit -m "Add FastAPI backend (views/likes/comments) and frontend integration"
+git push
+```
+
+### Git 提交记录
+
+```
+e1f0d96 Add FastAPI backend (views/likes/comments) and frontend integration
+83e10e2 Update changelog with quote comment feature
+3414e75 Add quote comment feature: select text to quote in comments
+435eff4 Update changelog with mascot feature
+7c73a54 Add 2D mascot character with eye tracking and speech bubbles
+90efed5 Switch giscus category to General
+3b68df0 Update giscus config with real repo and category IDs
+d691d79 Add reference_notebook to .gitignore
+464c0dd Remove reference_notebook from tracking
+cac29d7 Initial commit: a site MkDocs notebook
+```
