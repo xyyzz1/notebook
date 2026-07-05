@@ -1,0 +1,119 @@
+/* ========== 划线评论样式 ========== */
+
+/* 高亮样式 — 已有评论的划线 */
+._asite_highlight {
+  background: linear-gradient(to top, rgba(255, 171, 64, 0.3) 0%, rgba(255, 171, 64, 0.3) 40%, transparent 40%, transparent 100%);
+  cursor: pointer;
+  border-bottom: 2px dotted #ffab40;
+  transition: background 0.2s;
+}
+
+._asite_highlight:hover {
+  background: linear-gradient(to top, rgba(255, 171, 64, 0.5) 0%, rgba(255, 171, 64, 0.5) 40%, transparent 40%, transparent 100%);
+}
+
+/* 高亮 Popover */
+._asite_popover {
+  position: absolute;
+  z-index: 10002;
+  background: #fff;
+  border: 1px solid #ffab40;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  padding: 12px 14px;
+  min-width: 220px;
+  max-width: 320px;
+  font-size: 13px;
+  font-family: 'Noto Sans SC', sans-serif;
+  color: #333;
+}
+
+._asite_popover ._popover_text {
+  color: #e65100;
+  font-style: italic;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0e0d0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+._asite_popover ._popover_comment {
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+._asite_popover ._popover_meta {
+  font-size: 11px;
+  color: #999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+._asite_popover ._popover_close {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #999;
+}
+
+/* 划线评论面板（侧边栏） */
+._asite_comment_panel {
+  position: fixed;
+  right: -400px;
+  top: 0;
+  width: 380px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -2px 0 16px rgba(0,0,0,0.1);
+  z-index: 10003;
+  transition: right 0.3s ease;
+  overflow-y: auto;
+  padding: 24px 20px;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+._asite_comment_panel.open {
+  right: 0;
+}
+
+._asite_comment_panel h3 {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: #5d4037;
+}
+
+._asite_panel_overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 10002;
+  display: none;
+}
+
+._asite_panel_overlay.show {
+  display: block;
+}
+
+/* 选中文字后的划线按钮 */
+._asite_highlight_btn {
+  position: absolute;
+  z-index: 10000;
+  background: #ffab40;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  font-family: 'Noto Sans SC', sans-serif;
+}
