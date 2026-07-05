@@ -253,3 +253,42 @@ d691d79 Add reference_notebook to .gitignore
 464c0dd Remove reference_notebook from tracking
 cac29d7 Initial commit: a site MkDocs notebook
 ```
+
+---
+
+## 2026-07-05 博客推荐 + 每日新闻 + AI 摘要
+
+### 新功能
+
+| 功能 | 实现方式 | 文件 |
+|------|---------|------|
+| 博客推荐 | 首页纯静态推荐 Markdown 笔记 | `docs/index.md` |
+| 每日新闻 | 前端直调 RSS-to-JSON API，无需后端 | `docs/_js/news.js` |
+| AI 摘要 | 后端代理 DeepSeek API，前端按钮触发 | `backend/routers/summary.py` + `docs/_js/summary.js` |
+
+### 修改的文件
+
+| 文件 | 变更 |
+|------|------|
+| `docs/index.md` | 新增"站长推荐"区域 |
+| `backend/main.py` | 加载 .env，注册 summary 路由，health 返回 deepseek_configured |
+| `backend/requirements.txt` | 添加 python-dotenv, httpx |
+| `mkdocs.yml` | 添加 news.js, summary.js |
+| `.gitignore` | 排除 backend/.env, backend/data/ |
+
+### DeepSeek API Key 配置
+
+1. 打开 `backend/.env` 文件
+2. 将 `sk-your-api-key-here` 替换为你的真实 API Key（在 https://platform.deepseek.com/api_keys 获取）
+3. 重启后端服务
+
+### 执行的命令
+
+```bash
+pip install python-dotenv httpx
+mkdocs build
+git add -A
+git rm --cached backend/data/asite.db
+git commit -m "Add features: blog recommendation, daily news, AI summary (DeepSeek)"
+git push
+```
