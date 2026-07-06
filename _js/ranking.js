@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'http://47.99.61.217:8001';
+  const API_BASE = 'https://asite.abrdns.com:8443';
 
   // URL → 文章标题映射
   const TITLE_MAP = {

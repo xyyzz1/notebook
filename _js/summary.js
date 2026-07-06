@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'http://47.99.61.217:8001';
+  const API_BASE = 'https://asite.abrdns.com:8443';
 
   // 只在笔记详情页显示（排除封面和关于页）
   function shouldShow() {
